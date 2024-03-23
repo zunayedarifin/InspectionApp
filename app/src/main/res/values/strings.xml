@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Inspections</string>
+    <string name="weekly_inspection">Weekly Inspection</string>
+    <string name="holiday_inn_express_franklin">Holiday Inn Express Franklin</string>
+    <string name="guestroom_101">Guestroom 101</string>
+</resources>
