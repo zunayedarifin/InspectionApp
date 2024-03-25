@@ -2,6 +2,7 @@ package com.zunayed.inspectionapp.ui.fragment
 
 
 import android.app.Dialog
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.zunayed.inspectionapp.R
 import com.zunayed.inspectionapp.databinding.FragmentDetailsBottomSheetBinding
+import com.zunayed.inspectionapp.ui.activities.SliderActivity
 
 class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
@@ -289,8 +291,6 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
 
-        ////////
-
 
         binding.firstLVLayoutAction.greenButton.setOnClickListener {
             binding.firstLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green_600))
@@ -355,6 +355,34 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
             isThirdLvLayout = false
             binding.thirdLVLayoutAction.root.visibility = View.GONE
         }
+
+
+        binding.firstBedroomLayout.root.setOnClickListener {
+            val intent = Intent(requireContext(), SliderActivity::class.java)
+            startActivity(intent)
+        }
+        binding.secondBedroomLayout.root.setOnClickListener {
+            val intent = Intent(requireContext(), SliderActivity::class.java)
+            startActivity(intent)
+        }
+        binding.thirdBedroomLayout.root.setOnClickListener {
+            val intent = Intent(requireContext(), SliderActivity::class.java)
+            startActivity(intent)
+        }
+
+        binding.firstLVLayout.root.setOnClickListener {
+            val intent = Intent(requireContext(), SliderActivity::class.java)
+            startActivity(intent)
+        }
+        binding.secondLVLayout.root.setOnClickListener {
+            val intent = Intent(requireContext(), SliderActivity::class.java)
+            startActivity(intent)
+        }
+        binding.thirdLVLayout.root.setOnClickListener {
+            val intent = Intent(requireContext(), SliderActivity::class.java)
+            startActivity(intent)
+        }
+
 
     }
 }

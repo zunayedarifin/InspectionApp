@@ -52,7 +52,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginBottom="16dp">
 
             <androidx.core.widget.NestedScrollView
                 android:layout_width="match_parent"
@@ -88,7 +89,7 @@
                                     android:text="Holiday Inn Express Franklin"
                                     android:textStyle="bold"
                                     android:layout_marginStart="16dp"
-                                    android:textColor="#8E8D8D"
+                                    android:textColor="#8E8585"
                                     android:textSize="20sp"/>
 
                                 <ImageView
@@ -120,7 +121,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:background="#DAD8D8"
+                            android:background="#E5E3E3"
                             android:weightSum="1"
                             android:paddingVertical="12dp">
 
@@ -129,8 +130,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight=".9"
                                 android:layout_marginStart="18dp"
+                                android:textStyle="bold"
                                 android:text="Cleanliness Inspection"
-                                android:textColor="@color/gray"
+                                android:textColor="#8E8585"
                                 android:textSize="20sp"/>
 
                             <ImageView
@@ -146,8 +148,9 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:visibility="gone"
+                            tools:visibility="visible"
                             android:orientation="horizontal"
-                            android:background="#EDE3E3"
+                            android:background="#E8E7E7"
                             android:weightSum="1"
                             android:paddingVertical="12dp">
 
@@ -200,7 +203,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:background="@color/medium_light_gray"
+                            android:background="#E5E3E3"
                             android:weightSum="1"
                             android:paddingVertical="12dp">
 
@@ -209,8 +212,10 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight=".9"
                                 android:text="AM Inspection"
+                                android:textStyle="bold"
+
                                 android:layout_marginStart="18dp"
-                                android:textColor="@color/gray"
+                                android:textColor="#8E8585"
                                 android:textSize="20sp"/>
 
                             <ImageView
@@ -227,7 +232,8 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
                             android:visibility="gone"
-                            android:background="@color/light_gray"
+                            tools:visibility="visible"
+                            android:background="#E8E7E7"
                             android:weightSum="1"
                             android:paddingVertical="12dp">
 
@@ -290,8 +296,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:text="Complete"
+                android:elevation="8dp"
                 android:textColor="@color/white"
-                android:layout_marginBottom="16dp"
                 app:srcCompat="@drawable/ic_add"
                 android:backgroundTint="@android:color/holo_blue_light"
                 tools:ignore="HardcodedText" /> <!-- Your icon drawable -->
