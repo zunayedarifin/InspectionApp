@@ -33,12 +33,8 @@ class MainActivity : AppCompatActivity() {
 
         // Initialize adapter with sample data
         adapter = MainListAdapter(itemList){
-            val bottomSheetFragment = DetailsBottomSheetDialogFragment().apply {
-//                arguments = Bundle().apply {
-//                    putString("selectedItem", selectedItem)
-//                }
-            }
-            bottomSheetFragment.show(supportFragmentManager, "DetailsBottomSheetDialogFragment")
+            val fragment = DetailsBottomSheetDialogFragment()
+            fragment.show(supportFragmentManager, fragment.tag)
         }
         binding.recyclerView.adapter = adapter
 
