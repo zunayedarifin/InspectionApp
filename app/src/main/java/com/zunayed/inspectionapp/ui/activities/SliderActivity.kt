@@ -3,7 +3,9 @@ package com.zunayed.inspectionapp.ui.activities
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +19,9 @@ import com.zunayed.inspectionapp.ui.adapters.SliderAdapter
 
 class SliderActivity : AppCompatActivity() {
     private var sliderRunnable: Runnable? = null
+    private lateinit var indicator1 : ImageView
+    private lateinit var indicator2 : ImageView
+    private lateinit var indicator3 : ImageView
 
 
     private val viewPager2: ViewPager2? = null
@@ -27,6 +32,9 @@ class SliderActivity : AppCompatActivity() {
         setContentView(R.layout.activity_slider)
 
         var close: ImageButton = findViewById(R.id.close)
+        indicator1 = findViewById(R.id.indicator1)
+        indicator2 = findViewById(R.id.indicator2)
+        indicator3 = findViewById(R.id.indicator3)
         close.setOnClickListener {
             finish()
         }
@@ -68,10 +76,37 @@ class SliderActivity : AppCompatActivity() {
         viewPager2.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                sliderHandler.removeCallbacks(sliderRunnable!!)
+                if (sliderRunnable != null) {
+                    sliderHandler.removeCallbacks(sliderRunnable!!)
+
+                }
                 sliderHandler.postDelayed(sliderRunnable!!, 2000) // slide duration 2 seconds
+                setIndicator(position)
             }
         })
+
+
+
+    }
+
+    private fun setIndicator(position: Int) {
+        when(position % 3){
+            0 -> {
+                indicator1.setImageResource(R.drawable.indicator_dot_active_shape)
+                indicator2.setImageResource(R.drawable.indicator_dot_inactive_shape)
+                indicator3.setImageResource(R.drawable.indicator_dot_inactive_shape)
+            }
+            1 -> {
+                indicator1.setImageResource(R.drawable.indicator_dot_inactive_shape)
+                indicator2.setImageResource(R.drawable.indicator_dot_active_shape)
+                indicator3.setImageResource(R.drawable.indicator_dot_inactive_shape)
+            }
+            2 -> {
+                indicator1.setImageResource(R.drawable.indicator_dot_inactive_shape)
+                indicator2.setImageResource(R.drawable.indicator_dot_inactive_shape)
+                indicator3.setImageResource(R.drawable.indicator_dot_active_shape)
+            }
+        }
 
     }
 

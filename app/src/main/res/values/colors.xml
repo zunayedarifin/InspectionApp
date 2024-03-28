@@ -2,6 +2,8 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="indicator_dot_active">#F6F5F6</color>
+    <color name="indicator_dot_inactive">#6F6E6E</color>
     <color name="light_gray">#E6E3E3</color>
     <color name="medium_light_gray">#D1D0D0</color>
     <color name="gray">#A0A0A0</color>

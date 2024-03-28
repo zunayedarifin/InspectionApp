@@ -1,13 +1,15 @@
 package com.zunayed.inspectionapp.ui.fragment
 
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -15,6 +17,11 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.zunayed.inspectionapp.R
 import com.zunayed.inspectionapp.databinding.FragmentDetailsBottomSheetBinding
 import com.zunayed.inspectionapp.ui.activities.SliderActivity
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import me.thanel.swipeactionview.SwipeActionView
+import me.thanel.swipeactionview.SwipeGestureListener
 
 class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
@@ -32,7 +39,15 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private var isSecondLvLayout = false
     private var isThirdLvLayout = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    private var canBeClicked = false
+    private var initialX = 0f
+    private var initialY = 0f
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         _binding = FragmentDetailsBottomSheetBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -52,7 +67,8 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         )
 
         // Adjust BottomSheetDialog behavior
-        val bottomSheet = dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
+        val bottomSheet =
+            dialog.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
         val behavior = bottomSheet?.let { BottomSheetBehavior.from(it) }
         if (behavior != null) {
             behavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -61,6 +77,7 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         return dialog
     }
 
+    @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -72,317 +89,441 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
         binding.cleanlinessLayout.setOnClickListener {
-            if (isCleanlinessChecked){
+            if (isCleanlinessChecked) {
                 binding.bedroomsLayout.visibility = View.GONE
-                binding.firstBedroomLayout.root.visibility = View.GONE
-                binding.secondBedroomLayout.root.visibility = View.GONE
-                binding.thirdBedroomLayout.root.visibility = View.GONE
+                binding.firstList.visibility = View.GONE
                 isCleanlinessChecked = false
                 isBedroomChecked = false
-            }else{
+            } else {
                 binding.bedroomsLayout.visibility = View.VISIBLE
                 isCleanlinessChecked = true
             }
-            binding.firstBedroomLayoutAction.root.visibility = View.GONE
-            binding.secondBedroomLayoutAction.root.visibility = View.GONE
-            binding.thirdBedroomLayoutAction.root.visibility = View.GONE
             isFirstBedroomLayout = false
             isSecondBedroomLayout = false
             isThirdBedroomLayout = false
         }
 
         binding.bedroomsLayout.setOnClickListener {
-            if (isBedroomChecked){
-                binding.firstBedroomLayout.root.visibility = View.GONE
-                binding.secondBedroomLayout.root.visibility = View.GONE
-                binding.thirdBedroomLayout.root.visibility = View.GONE
+            if (isBedroomChecked) {
+                binding.firstList.visibility = View.GONE
                 isBedroomChecked = false
-            }else{
-                binding.firstBedroomLayout.root.visibility = View.VISIBLE
-                binding.secondBedroomLayout.root.visibility = View.VISIBLE
-                binding.thirdBedroomLayout.root.visibility = View.VISIBLE
+            } else {
+                binding.firstList.visibility = View.VISIBLE
                 isBedroomChecked = true
             }
-            binding.firstBedroomLayoutAction.root.visibility = View.GONE
-            binding.secondBedroomLayoutAction.root.visibility = View.GONE
-            binding.thirdBedroomLayoutAction.root.visibility = View.GONE
-            isFirstBedroomLayout = false
-            isSecondBedroomLayout = false
-            isThirdBedroomLayout = false
         }
 
 
         binding.amInspectionLayout.setOnClickListener {
-            if (isAMInspectionChecked){
+            if (isAMInspectionChecked) {
                 binding.livingAreasLayout.visibility = View.GONE
-                binding.firstLVLayout.root.visibility = View.GONE
-                binding.secondLVLayout.root.visibility = View.GONE
-                binding.thirdLVLayout.root.visibility = View.GONE
+                binding.secondList.visibility = View.GONE
                 isAMInspectionChecked = false
                 isLivingAreaChecked = false
-            }else{
+            } else {
                 binding.livingAreasLayout.visibility = View.VISIBLE
                 isAMInspectionChecked = true
             }
-            binding.firstLVLayoutAction.root.visibility = View.GONE
-            binding.secondLVLayoutAction.root.visibility = View.GONE
-            binding.thirdLVLayoutAction.root.visibility = View.GONE
             isFirstLvLayout = false
             isSecondLvLayout = false
             isThirdLvLayout = false
         }
 
         binding.livingAreasLayout.setOnClickListener {
-            if (isLivingAreaChecked){
-                binding.firstLVLayout.root.visibility = View.GONE
-                binding.secondLVLayout.root.visibility = View.GONE
-                binding.thirdLVLayout.root.visibility = View.GONE
+            if (isLivingAreaChecked) {
+                binding.secondList.visibility = View.GONE
                 isLivingAreaChecked = false
-            }else{
-                binding.firstLVLayout.root.visibility = View.VISIBLE
-                binding.secondLVLayout.root.visibility = View.VISIBLE
-                binding.thirdLVLayout.root.visibility = View.VISIBLE
+            } else {
+                binding.secondList.visibility = View.VISIBLE
                 isLivingAreaChecked = true
             }
-            binding.firstLVLayoutAction.root.visibility = View.GONE
-            binding.secondLVLayoutAction.root.visibility = View.GONE
-            binding.thirdLVLayoutAction.root.visibility = View.GONE
             isFirstLvLayout = false
             isSecondLvLayout = false
             isThirdLvLayout = false
         }
 
-        binding.firstBedroomLayout.root.setOnLongClickListener {
-            if (isFirstBedroomLayout){
-                binding.firstBedroomLayoutAction.root.visibility = View.GONE
-                isFirstBedroomLayout = false
-            }else{
-                binding.firstBedroomLayoutAction.root.visibility = View.VISIBLE
-                isFirstBedroomLayout = true
-            }
-            // Perform action on long click
-            true // Return true to consume the long click event
-        }
-        binding.secondBedroomLayout.root.setOnLongClickListener {
-            if (isSecondBedroomLayout){
-                binding.secondBedroomLayoutAction.root.visibility = View.GONE
-                isSecondBedroomLayout = false
-            }else{
-                binding.secondBedroomLayoutAction.root.visibility = View.VISIBLE
-                isSecondBedroomLayout = true
-            }
-
-            // Perform action on long click
-            true // Return true to consume the long click event
-        }
-        binding.thirdBedroomLayout.root.setOnLongClickListener {
-            if (isThirdBedroomLayout){
-                binding.thirdBedroomLayoutAction.root.visibility = View.GONE
-                isThirdBedroomLayout = false
-            }else{
-                binding.thirdBedroomLayoutAction.root.visibility = View.VISIBLE
-                isThirdBedroomLayout = true
-            }
-
-            // Perform action on long click
-            true // Return true to consume the long click event
-        }
-
-
-
-        binding.firstLVLayout.root.setOnLongClickListener {
-            if (isFirstLvLayout){
-                binding.firstLVLayoutAction.root.visibility = View.GONE
-                isFirstLvLayout = false
-            }else{
-                binding.firstLVLayoutAction.root.visibility = View.VISIBLE
-                isFirstLvLayout = true
-            }
-            // Perform action on long click
-            true // Return true to consume the long click event
-        }
-        binding.secondLVLayout.root.setOnLongClickListener {
-            if (isSecondLvLayout){
-                binding.secondLVLayoutAction.root.visibility = View.GONE
-                isSecondLvLayout = false
-            }else{
-                binding.secondLVLayoutAction.root.visibility = View.VISIBLE
-                isSecondLvLayout = true
-            }
-
-            // Perform action on long click
-            true // Return true to consume the long click event
-        }
-        binding.thirdLVLayout.root.setOnLongClickListener {
-            if (isThirdLvLayout){
-                binding.thirdLVLayoutAction.root.visibility = View.GONE
-                isThirdLvLayout = false
-            }else{
-                binding.thirdLVLayoutAction.root.visibility = View.VISIBLE
-                isThirdLvLayout = true
-            }
-
-            // Perform action on long click
-            true // Return true to consume the long click event
-        }
 
         binding.firstBedroomLayoutAction.greenButton.setOnClickListener {
-            binding.firstBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green_600))
-            isFirstBedroomLayout = false
-            binding.firstBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.firstBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.green_600
+                    )
+                )
+                isFirstBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.firstBedroomLayoutAction.redButton.setOnClickListener {
-            binding.firstBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
-            isFirstBedroomLayout = false
-            binding.firstBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.firstBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red
+                    )
+                )
+                isFirstBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.firstBedroomLayoutAction.orangeButton.setOnClickListener {
-            binding.firstBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.orange))
-            isFirstBedroomLayout = false
-            binding.firstBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.firstBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.orange
+                    )
+                )
+                isFirstBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.firstBedroomLayoutAction.grayButton.setOnClickListener {
-            binding.firstBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            isFirstBedroomLayout = false
-            binding.firstBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.firstBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.gray
+                    )
+                )
+                isFirstBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
 
 
         binding.secondBedroomLayoutAction.greenButton.setOnClickListener {
-            binding.secondBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green_600))
-            isSecondBedroomLayout = false
-            binding.secondBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.secondBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.green_600
+                    )
+                )
+                isSecondBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
+
         }
         binding.secondBedroomLayoutAction.redButton.setOnClickListener {
-            binding.secondBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
-            isSecondBedroomLayout = false
-            binding.secondBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.secondBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red
+                    )
+                )
+                isSecondBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.secondBedroomLayoutAction.orangeButton.setOnClickListener {
-            binding.secondBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.orange))
-            isSecondBedroomLayout = false
-            binding.secondBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.secondBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.orange
+                    )
+                )
+                isSecondBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.secondBedroomLayoutAction.grayButton.setOnClickListener {
-            binding.secondBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            isSecondBedroomLayout = false
-            binding.secondBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.secondBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.gray
+                    )
+                )
+                isSecondBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
 
         binding.thirdBedroomLayoutAction.greenButton.setOnClickListener {
-            binding.thirdBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green_600))
-            isThirdBedroomLayout = false
-            binding.thirdBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.thirdBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.green_600
+                    )
+                )
+                isThirdBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.thirdBedroomLayoutAction.redButton.setOnClickListener {
-            binding.thirdBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
-            isThirdBedroomLayout = false
-            binding.thirdBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.thirdBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red
+                    )
+                )
+                isThirdBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.thirdBedroomLayoutAction.orangeButton.setOnClickListener {
-            binding.thirdBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.orange))
-            isThirdBedroomLayout = false
-            binding.thirdBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.thirdBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.orange
+                    )
+                )
+                isThirdBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.thirdBedroomLayoutAction.grayButton.setOnClickListener {
-            binding.thirdBedroomLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            isThirdBedroomLayout = false
-            binding.thirdBedroomLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.thirdBedroomLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.gray
+                    )
+                )
+                isThirdBedroomLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
 
 
 
         binding.firstLVLayoutAction.greenButton.setOnClickListener {
-            binding.firstLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green_600))
-            isFirstLvLayout = false
-            binding.firstLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.firstLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.green_600
+                    )
+                )
+                isFirstLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.firstLVLayoutAction.redButton.setOnClickListener {
-            binding.firstLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
-            isFirstLvLayout = false
-            binding.firstLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.firstLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red
+                    )
+                )
+                isFirstLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.firstLVLayoutAction.orangeButton.setOnClickListener {
-            binding.firstLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.orange))
-            isFirstLvLayout = false
-            binding.firstLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.firstLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.orange
+                    )
+                )
+                isFirstLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.firstLVLayoutAction.grayButton.setOnClickListener {
-            binding.firstLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            isFirstLvLayout = false
-            binding.firstLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.firstLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.gray
+                    )
+                )
+                isFirstLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
 
 
         binding.secondLVLayoutAction.greenButton.setOnClickListener {
-            binding.secondLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green_600))
-            isSecondLvLayout = false
-            binding.secondLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.secondLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.green_600
+                    )
+                )
+                isSecondLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.secondLVLayoutAction.redButton.setOnClickListener {
-            binding.secondLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
-            isSecondLvLayout = false
-            binding.secondLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.secondLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red
+                    )
+                )
+                isSecondLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.secondLVLayoutAction.orangeButton.setOnClickListener {
-            binding.secondLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.orange))
-            isSecondLvLayout = false
-            binding.secondLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.secondLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.orange
+                    )
+                )
+                isSecondLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.secondLVLayoutAction.grayButton.setOnClickListener {
-            binding.secondLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            isSecondLvLayout = false
-            binding.secondLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.secondLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.gray
+                    )
+                )
+                isSecondLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
 
         binding.thirdLVLayoutAction.greenButton.setOnClickListener {
-            binding.thirdLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.green_600))
-            isThirdLvLayout = false
-            binding.thirdLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.thirdLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.green_600
+                    )
+                )
+                isThirdLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.thirdLVLayoutAction.redButton.setOnClickListener {
-            binding.thirdLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.red))
-            isThirdLvLayout = false
-            binding.thirdLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.thirdLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red
+                    )
+                )
+                isThirdLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.thirdLVLayoutAction.orangeButton.setOnClickListener {
-            binding.thirdLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.orange))
-            isThirdLvLayout = false
-            binding.thirdLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.thirdLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.orange
+                    )
+                )
+                isThirdLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
         }
         binding.thirdLVLayoutAction.grayButton.setOnClickListener {
-            binding.thirdLVLayout.status.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.gray))
-            isThirdLvLayout = false
-            binding.thirdLVLayoutAction.root.visibility = View.GONE
+            if (canBeClicked) {
+                binding.thirdLVLayoutValue.status.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.gray
+                    )
+                )
+                isThirdLvLayout = false
+                canBeClicked = false
+            } else goToSliderActivity()
+        }
+
+        binding.firstBedroomLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+        binding.secondBedroomLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+        binding.thirdBedroomLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+
+        binding.firstLVLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+        binding.secondLVLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+        binding.thirdLVLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+
+        val delayedSwipeGestureListener: SwipeGestureListener = object : SwipeGestureListener {
+            override fun onSwipedHalfwayRight(swipeActionView: SwipeActionView): Boolean {
+                return true
+            }
+
+            override fun onSwipedHalfwayLeft(swipeActionView: SwipeActionView): Boolean {
+                return true
+            }
+
+            override fun onSwipeRightComplete(swipeActionView: SwipeActionView) {
+                //this won't be called since onSwipedRight returns false
+            }
+
+            override fun onSwipeLeftComplete(swipeActionView: SwipeActionView) {
+                //this won't be called since onSwipedLeft returns false
+            }
+
+            override fun onSwipedLeft(swipeActionView: SwipeActionView): Boolean {
+                canBeClicked = true
+//                swipeActionView.animateToOriginalPosition(2000)
+                return false
+            }
+
+            override fun onSwipedRight(swipeActionView: SwipeActionView): Boolean {
+//                swipeActionView.animateToOriginalPosition(2000)
+                return false
+            }
         }
 
 
-        binding.firstBedroomLayout.root.setOnClickListener {
-            val intent = Intent(requireContext(), SliderActivity::class.java)
-            startActivity(intent)
-        }
-        binding.secondBedroomLayout.root.setOnClickListener {
-            val intent = Intent(requireContext(), SliderActivity::class.java)
-            startActivity(intent)
-        }
-        binding.thirdBedroomLayout.root.setOnClickListener {
-            val intent = Intent(requireContext(), SliderActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.firstLVLayout.root.setOnClickListener {
-            val intent = Intent(requireContext(), SliderActivity::class.java)
-            startActivity(intent)
-        }
-        binding.secondLVLayout.root.setOnClickListener {
-            val intent = Intent(requireContext(), SliderActivity::class.java)
-            startActivity(intent)
-        }
-        binding.thirdLVLayout.root.setOnClickListener {
-            val intent = Intent(requireContext(), SliderActivity::class.java)
-            startActivity(intent)
-        }
 
 
+        binding.firstBedroomLayout.activationDistanceRatio = 1f
+        binding.firstBedroomLayout.swipeGestureListener = delayedSwipeGestureListener
+
+        binding.secondBedroomLayout.activationDistanceRatio = 1f
+        binding.secondBedroomLayout.swipeGestureListener = delayedSwipeGestureListener
+
+        binding.thirdBedroomLayout.activationDistanceRatio = 1f
+        binding.thirdBedroomLayout.swipeGestureListener = delayedSwipeGestureListener
+
+        binding.firstLVLayout.activationDistanceRatio = 1f
+        binding.firstLVLayout.swipeGestureListener = delayedSwipeGestureListener
+
+        binding.secondLVLayout.activationDistanceRatio = 1f
+        binding.secondLVLayout.swipeGestureListener = delayedSwipeGestureListener
+
+        binding.thirdLVLayout.activationDistanceRatio = 1f
+        binding.thirdLVLayout.swipeGestureListener = delayedSwipeGestureListener
+
+    }
+
+    private fun goToSliderActivity() {
+        val intent = Intent(requireContext(), SliderActivity::class.java)
+        startActivity(intent)
+    }
+
+    private fun showOptions(vararg views: LinearLayout) {
+        views.forEach { it.visibility = LinearLayout.VISIBLE }
+    }
+
+    private fun hideOptions(vararg views: LinearLayout) {
+        views.forEach { it.visibility = LinearLayout.GONE }
     }
 }
