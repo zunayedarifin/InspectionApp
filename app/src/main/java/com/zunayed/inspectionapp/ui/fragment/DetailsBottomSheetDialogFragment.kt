@@ -42,6 +42,34 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
     private var canBeClicked = false
     private var initialX = 0f
     private var initialY = 0f
+    val delayedSwipeGestureListener: SwipeGestureListener = object : SwipeGestureListener {
+        override fun onSwipedHalfwayRight(swipeActionView: SwipeActionView): Boolean {
+            return true
+        }
+
+        override fun onSwipedHalfwayLeft(swipeActionView: SwipeActionView): Boolean {
+            return true
+        }
+
+        override fun onSwipeRightComplete(swipeActionView: SwipeActionView) {
+            //this won't be called since onSwipedRight returns false
+        }
+
+        override fun onSwipeLeftComplete(swipeActionView: SwipeActionView) {
+            //this won't be called since onSwipedLeft returns false
+        }
+
+        override fun onSwipedLeft(swipeActionView: SwipeActionView): Boolean {
+            canBeClicked = true
+//                swipeActionView.animateToOriginalPosition(2000)
+            return false
+        }
+
+        override fun onSwipedRight(swipeActionView: SwipeActionView): Boolean {
+//                swipeActionView.animateToOriginalPosition(2000)
+            return false
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -88,6 +116,16 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
             dialog?.dismiss()
         }
 
+        onCategoryClick()
+
+        onActionClick()
+
+        onLayoutClick()
+
+        addSwipeGestureListeners(delayedSwipeGestureListener)
+    }
+
+    private fun onCategoryClick() {
         binding.cleanlinessLayout.setOnClickListener {
             if (isCleanlinessChecked) {
                 binding.bedroomsLayout.visibility = View.GONE
@@ -141,8 +179,31 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
             isSecondLvLayout = false
             isThirdLvLayout = false
         }
+    }
 
+    private fun onLayoutClick() {
+        binding.firstBedroomLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+        binding.secondBedroomLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+        binding.thirdBedroomLayout.setOnClickListener {
+            goToSliderActivity()
+        }
 
+        binding.firstLVLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+        binding.secondLVLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+        binding.thirdLVLayout.setOnClickListener {
+            goToSliderActivity()
+        }
+    }
+
+    private fun onActionClick() {
         binding.firstBedroomLayoutAction.greenButton.setOnClickListener {
             if (canBeClicked) {
                 binding.firstBedroomLayoutValue.status.setBackgroundColor(
@@ -293,7 +354,6 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
         }
 
 
-
         binding.firstLVLayoutAction.greenButton.setOnClickListener {
             if (canBeClicked) {
                 binding.firstLVLayoutValue.status.setBackgroundColor(
@@ -442,58 +502,9 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
             } else goToSliderActivity()
         }
 
-        binding.firstBedroomLayout.setOnClickListener {
-            goToSliderActivity()
-        }
-        binding.secondBedroomLayout.setOnClickListener {
-            goToSliderActivity()
-        }
-        binding.thirdBedroomLayout.setOnClickListener {
-            goToSliderActivity()
-        }
+    }
 
-        binding.firstLVLayout.setOnClickListener {
-            goToSliderActivity()
-        }
-        binding.secondLVLayout.setOnClickListener {
-            goToSliderActivity()
-        }
-        binding.thirdLVLayout.setOnClickListener {
-            goToSliderActivity()
-        }
-
-        val delayedSwipeGestureListener: SwipeGestureListener = object : SwipeGestureListener {
-            override fun onSwipedHalfwayRight(swipeActionView: SwipeActionView): Boolean {
-                return true
-            }
-
-            override fun onSwipedHalfwayLeft(swipeActionView: SwipeActionView): Boolean {
-                return true
-            }
-
-            override fun onSwipeRightComplete(swipeActionView: SwipeActionView) {
-                //this won't be called since onSwipedRight returns false
-            }
-
-            override fun onSwipeLeftComplete(swipeActionView: SwipeActionView) {
-                //this won't be called since onSwipedLeft returns false
-            }
-
-            override fun onSwipedLeft(swipeActionView: SwipeActionView): Boolean {
-                canBeClicked = true
-//                swipeActionView.animateToOriginalPosition(2000)
-                return false
-            }
-
-            override fun onSwipedRight(swipeActionView: SwipeActionView): Boolean {
-//                swipeActionView.animateToOriginalPosition(2000)
-                return false
-            }
-        }
-
-
-
-
+    private fun addSwipeGestureListeners(delayedSwipeGestureListener: SwipeGestureListener) {
         binding.firstBedroomLayout.activationDistanceRatio = 1f
         binding.firstBedroomLayout.swipeGestureListener = delayedSwipeGestureListener
 
@@ -511,7 +522,6 @@ class DetailsBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
         binding.thirdLVLayout.activationDistanceRatio = 1f
         binding.thirdLVLayout.swipeGestureListener = delayedSwipeGestureListener
-
     }
 
     private fun goToSliderActivity() {

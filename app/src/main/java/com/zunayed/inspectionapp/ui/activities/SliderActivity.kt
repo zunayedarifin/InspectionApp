@@ -1,9 +1,7 @@
 package com.zunayed.inspectionapp.ui.activities
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
-import android.util.Log
 import android.widget.ImageButton
 import android.widget.ImageView
 import androidx.activity.enableEdgeToEdge
@@ -38,12 +36,7 @@ class SliderActivity : AppCompatActivity() {
         close.setOnClickListener {
             finish()
         }
-//        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-//            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-//            insets
-//        }
-        // Initialize the sliderRunnable only after viewPager2 is initialized
+
         sliderRunnable = Runnable {
             viewPager2?.let {
                 it.currentItem = (it.currentItem + 1) % it.adapter?.itemCount!!
@@ -52,9 +45,9 @@ class SliderActivity : AppCompatActivity() {
         val viewPager2: ViewPager2 = findViewById(R.id.viewPagerImageSlider)
 
         val sliderItems = mutableListOf(
-            SliderItems(R.drawable.image1),
             SliderItems(R.drawable.image2),
-            SliderItems(R.drawable.image3)
+            SliderItems(R.drawable.image3),
+            SliderItems(R.drawable.image1)
         )
 
         viewPager2.adapter = SliderAdapter(sliderItems, viewPager2)

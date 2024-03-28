@@ -42,7 +42,6 @@ class SliderAdapter internal constructor(
 
         fun setImage(sliderItems: SliderItems) {
             //use glide or picasso in case you get image from internet
-
             imageView.setImageResource(sliderItems.image)
         }
     }
